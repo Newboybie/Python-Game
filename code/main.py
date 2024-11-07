@@ -2,6 +2,7 @@ import pygame, sys                   # Nhập thư viện Pygame để phát tri
 from settings import *               # Nhập các thiết lập từ file settings, như WINDOW_WIDTH và WINDOW_HEIGHT
 from pytmx.util_pygame import load_pygame  # Nhập hàm load_pygame để tải bản đồ TMX
 from tiles import Tile               # Nhập lớp Tile để tạo các ô (tile) trong game
+from player import Player            # Nhập lớp Player
 
 # Định nghĩa lớp Main để quản lý toàn bộ trò chơi
 class Main:
@@ -20,7 +21,8 @@ class Main:
     def setup(self):
         tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX từ đường dẫn chỉ định
         for x, y, sur in tmx_map.get_layer_by_name('Level').tiles():
-            Tile((x * 16, y * 16), sur, self.all_sprites)  # Tạo tile tại (x * 16, y * 16) với hình ảnh `sur` và thêm vào `all_sprites`
+            Tile((x * 0, y * 0), sur, self.all_sprites)  # Tạo tile tại (x * 16, y * 16) với hình ảnh `sur` và thêm vào `all_sprites`
+        Player((100, 200), self.all_sprites)   #In ra player tại (100, 200)
 
     def run(self):                   # Phương thức run để chạy vòng lặp chính của trò chơi
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
