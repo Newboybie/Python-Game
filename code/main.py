@@ -19,7 +19,7 @@ class AllSprites(pygame.sprite.Group):
         self.offset.y = player.rect.centery - WINDOW_HEIGHT / 2
 
         # Vẽ từng sprite với offset
-        for sprite in self.sprites():
+        for sprite in sorted(self.sprites(), key= lambda sprite: sprite.z): # In ra từng sprite ứng với thứ tự của layer chứa sprite
             offset_rect = sprite.image.get_rect(center=sprite.rect.center)  # Lấy rect cho vị trí offset của sprite
             offset_rect.center -= self.offset                               # Trừ offset để điều chỉnh vị trí
             self.display_surface.blit(sprite.image, offset_rect)            # Vẽ sprite lên màn hình
@@ -42,14 +42,14 @@ class Main:
     def setup(self):
         tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX
 
-        #Tiles
+        #Main Layer
         for x, y, surf in tmx_map.get_layer_by_name('Level').tiles():
-            Tile((x * 64, y * 64), surf, self.all_sprites)  # Tạo một tile ở vị trí (x * 64, y * 64) với hình ảnh `surf` và thêm vào nhóm `all_sprites`
+            Tile((x * 64, y * 64), surf, self.all_sprites, LAYER['main'])  # Tạo một tile ở vị trí (x * 64, y * 64) với hình ảnh `surf` và thêm vào nhóm `all_sprites`
 
         #Layer
         for layer in ['BG', 'BG Detail', 'FG Detail Bottom', 'FG Detail Top']:  #In ra tất cả các layer trong map
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
-                Tile((x * 64, y * 64), surf, self.all_sprites)
+                Tile((x * 64, y * 64), surf, self.all_sprites, LAYER[layer]) 
             
         
         #Objects

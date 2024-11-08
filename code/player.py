@@ -12,6 +12,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(topleft=pos)  # Tạo hình chữ nhật (rect) bao quanh `image` và đặt góc trên cùng bên trái tại vị trí `pos`
 
+        self.z = LAYER['main']                 # Layer nhân vật sẽ tồn tại
         self.direction = vector()              # Tạo một vector để quản lý hướng di chuyển của nhân vật
         self.pos = vector(self.rect.topleft)   # Sao chép vị trí ban đầu của `rect` vào `pos` dưới dạng vector để xử lý di chuyển chính xác hơn
         self.speed = 400                       # Đặt tốc độ di chuyển của nhân vật (400 pixel mỗi giây)
