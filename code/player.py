@@ -53,7 +53,13 @@ class Player(pygame.sprite.Sprite):
         # In ra toàn bộ từ điển animations để kiểm tra dữ liệu đã tải
         print(self.animations)
 
-
+    def animate(self, dt):                      # Hàm tạo animate
+        self.frame_index += 7 * dt              # Tốc độ lặp animation            
+        current_animations = self.animations[self.status]   
+        if self.frame_index >= len(current_animations):   # Lặp lại từ đầu nếu đã tới frame cuối
+            self.frame_index = 0
+        
+        self.image = current_animations[int(self.frame_index)]  # Lấy image của frame hiện tại
 
 
     def input(self):
@@ -83,4 +89,5 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.input()                           
-        self.move(dt)                         
+        self.move(dt)   
+        self.animate(dt)                      
