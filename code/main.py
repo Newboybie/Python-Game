@@ -40,10 +40,19 @@ class Main:
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
 
     def setup(self):
-        tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX từ đường dẫn chỉ định
+        tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX
+
+        #Tiles
         for x, y, surf in tmx_map.get_layer_by_name('Level').tiles():
             Tile((x * 64, y * 64), surf, self.all_sprites)  # Tạo một tile ở vị trí (x * 64, y * 64) với hình ảnh `surf` và thêm vào nhóm `all_sprites`
 
+        #Layer
+        for layer in ['BG', 'BG Detail', 'FG Detail Bottom', 'FG Detail Top']:  #In ra tất cả các layer trong map
+            for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
+                Tile((x * 64, y * 64), surf, self.all_sprites)
+            
+        
+        #Objects
         for obj in tmx_map.get_layer_by_name('Entities'):
             if obj.name == 'Player':
                 self.player = Player((obj.x, obj.y), self.all_sprites)   #In ra player tại vị trí xuất phát(Entities có name = player)
