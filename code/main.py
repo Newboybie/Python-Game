@@ -42,8 +42,11 @@ class Main:
     def setup(self):
         tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX từ đường dẫn chỉ định
         for x, y, surf in tmx_map.get_layer_by_name('Level').tiles():
-            Tile((x * 64, y * 64), surf, self.all_sprites)  # Tạo tile tại (0, 0) với hình ảnh `sur` và thêm vào `all_sprites`
-        self.player = Player((100, 200), self.all_sprites)   #In ra player tại (100, 200) và tao một player
+            Tile((x * 64, y * 64), surf, self.all_sprites)  # Tạo một tile ở vị trí (x * 64, y * 64) với hình ảnh `surf` và thêm vào nhóm `all_sprites`
+
+        for obj in tmx_map.get_layer_by_name('Entities'):
+            if obj.name == 'Player':
+                self.player = Player((obj.x, obj.y), self.all_sprites)   #In ra player tại vị trí xuất phát(Entities có name = player)
 
     def run(self):                   # Phương thức run để chạy vòng lặp chính của trò chơi
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
