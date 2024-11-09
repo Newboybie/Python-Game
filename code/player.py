@@ -24,6 +24,12 @@ class Player(pygame.sprite.Sprite):
         self.old_rect = self.rect.copy()        # Lưu trữ vị trí hiện tại của player 
         self.collision_sprites = collision_sprites  
 
+        #Vertical movement
+        self.gravity = 15
+        self.jump_speed = 1200
+        self.on_floor = False
+        self.duck = False
+
     def import_assets(self, path):
         self.animations = {}  # Tạo một từ điển trống để lưu các animation theo từng tên thư mục.
     
@@ -75,12 +81,14 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = -1
         else:
             self.direction.x = 0              
-        if keys[pygame.K_w]:                   
-            self.direction.y = -1
-        elif keys[pygame.K_s]:                 
-            self.direction.y = 1
+
+        if keys[pygame.K_w]:
+            self.direction.y = -self.jump_speed
+
+        if keys[pygame.K_s]:
+            self.duck = True
         else:
-            self.direction.y = 0               
+            self.duck = False          
 
     def move(self, dt):
         # Tính toán vị trí mới dựa trên hướng di chuyển, tốc độ và thời gian giữa các khung hình
@@ -88,7 +96,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = round(self.pos.x)        # Cập nhật vị trí x của `rect` với giá trị x mới đã được làm tròn
         self.collision('horizontal')           # Kiểm tra collison horizontal axit
 
-        self.pos.y += self.direction.y * self.speed * dt
+        self.direction.y += self.gravity
+        self.pos.y += self.direction.y * dt
         self.rect.y = round(self.pos.y)        # Cập nhật vị trí y của `rect` với giá trị y mới đã được làm tròn
         self.collision('vertical')             # Kiểm tra collison vertical axit
 

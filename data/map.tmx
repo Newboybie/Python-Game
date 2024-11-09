@@ -282,7 +282,7 @@
   <object id="27" name="Platform" gid="853" x="4066.67" y="2350.67" width="192" height="56"/>
  </objectgroup>
  <objectgroup id="7" name="Entities">
-  <object id="1" name="Player" x="191.333" y="2859.33">
+  <object id="1" name="Player" x="143.333" y="2815.33">
    <point/>
   </object>
   <object id="3" name="Enemy" x="907.5" y="2567.5">
