@@ -56,7 +56,7 @@ class Main:
         #Objects
         for obj in tmx_map.get_layer_by_name('Entities'):
             if obj.name == 'Player':
-                self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player')   #In ra player tại vị trí xuất phát(Entities có name = player)
+                self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player', self.collision_sprites)   #In ra player tại vị trí xuất phát(Entities có name = player)
 
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát

@@ -5,7 +5,7 @@ from pygame.math import Vector2 as vector
 
 # Định nghĩa lớp Player
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, group, path):
+    def __init__(self, pos, group, path, collision_sprites):
         super().__init__(group)    # Khởi tạo lớp cơ sở (Sprite) và thêm player vào nhóm sprite `group` được truyền vào
 
         self.import_assets(path)               # Lấy asset cho player tại path(đường dẫn)
@@ -22,6 +22,7 @@ class Player(pygame.sprite.Sprite):
 
         #Collisions
         self.old_rect = self.rect.copy()        # Lưu trữ vị trí hiện tại của player 
+        self.collision_sprites = collision_sprites  
 
     def import_assets(self, path):
         self.animations = {}  # Tạo một từ điển trống để lưu các animation theo từng tên thư mục.
@@ -85,9 +86,25 @@ class Player(pygame.sprite.Sprite):
         # Tính toán vị trí mới dựa trên hướng di chuyển, tốc độ và thời gian giữa các khung hình
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.x = round(self.pos.x)        # Cập nhật vị trí x của `rect` với giá trị x mới đã được làm tròn
-        
+        self.collision('horizontal')           # Kiểm tra collison horizontal axit
+
         self.pos.y += self.direction.y * self.speed * dt
         self.rect.y = round(self.pos.y)        # Cập nhật vị trí y của `rect` với giá trị y mới đã được làm tròn
+
+    def collision(self, direction):             # Kiểm tra các điều kiện collision
+        for sprite in self.collision_sprites.sprites():
+            if sprite.rect.colliderect(self.rect):    
+
+                if direction == 'horizontal':   # Collision theo horizontal axis
+                    # Left collison
+                    if self.rect.left <= sprite.rect.right and self.old_rect.left >= sprite.old_rect.right:  # Kiểm tra hướng va chạm(Trạng thái trước va chạm)
+                        self.rect.left = sprite.rect.right
+                    # Right collison
+                    if self.rect.right >= sprite.rect.left and self.old_rect.right <= sprite.old_rect.left:  # Kiểm tra hướng va chạm
+                        self.rect.right = sprite.rect.left
+                    self.pos.x = self.rect.x    # Cập nhật vị trí mới
+                else:
+                    pass
 
     def update(self, dt):
         self.old_rect = self.rect.copy()       # Cập nhật liên tục trạng thái của player
