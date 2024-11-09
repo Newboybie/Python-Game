@@ -37,6 +37,9 @@ class Player(pygame.sprite.Sprite):
         # Nhảy
         if self.direction.y != 0 and not self.on_floor:
             self.status = self.status.split('_')[0] + '_jump'
+        # Cúi
+        if self.on_floor and self.duck:
+            self.status = self.status.split('_')[0] + '_duck'
 
     def check_contact(self):
         # Tạo một hình chữ nhật nhỏ dưới đáy của nhân vật để kiểm tra va chạm với sàn
@@ -79,9 +82,6 @@ class Player(pygame.sprite.Sprite):
                     # Thêm Surface đã tải vào danh sách của thư mục tương ứng trong self.animations
                     self.animations[key].append(surf)
 
-        # In ra toàn bộ từ điển animations để kiểm tra dữ liệu đã tải
-        print(self.animations)
-
     def animate(self, dt):                      # Hàm tạo animate
         self.frame_index += 7 * dt              # Tốc độ lặp animation            
         current_animations = self.animations[self.status]   
@@ -113,6 +113,9 @@ class Player(pygame.sprite.Sprite):
             self.duck = False          
 
     def move(self, dt):
+        if self.duck and self.on_floor:
+            self.direction.x = 0
+
         # Tính toán vị trí mới dựa trên hướng di chuyển, tốc độ và thời gian giữa các khung hình
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.x = round(self.pos.x)        # Cập nhật vị trí x của `rect` với giá trị x mới đã được làm tròn
