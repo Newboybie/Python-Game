@@ -11,3 +11,8 @@ class Tile(pygame.sprite.Sprite):
                                      # Tạo hình chữ nhật (rect) bao quanh hình ảnh, đặt vị trí topleft của nó tại `pos`
                                      # `rect` giúp xác định vị trí và cho phép dễ dàng kiểm tra va chạm, vẽ tile lên màn hình
         self.z = z                   # Thuộc tính chứa thứ tự layer
+
+class CollisionTile(Tile):
+    def __init__(self, pos, surf, groups):
+        super().__init__(pos, surf, groups, LAYER['main'])
+        self.old_rect = self.rect.copy()
