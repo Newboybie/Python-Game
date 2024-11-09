@@ -19,7 +19,9 @@ class Player(pygame.sprite.Sprite):
         self.direction = vector()              # Vector2 để quản lý hướng di chuyển của nhân vật
         self.pos = vector(self.rect.topleft)   # Sao chép vị trí ban đầu của `rect` vào `pos` dưới dạng vector để xử lý di chuyển chính xác hơn      
         self.speed = 400                       # Đặt tốc độ di chuyển của nhân vật (400 pixel mỗi giây  
-        
+
+        #Collisions
+        self.old_rect = self.rect.copy()        # Lưu trữ vị trí hiện tại của player 
 
     def import_assets(self, path):
         self.animations = {}  # Tạo một từ điển trống để lưu các animation theo từng tên thư mục.
@@ -88,6 +90,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = round(self.pos.y)        # Cập nhật vị trí y của `rect` với giá trị y mới đã được làm tròn
 
     def update(self, dt):
+        self.old_rect = self.rect.copy()       # Cập nhật liên tục trạng thái của player
         self.input()                           
         self.move(dt)   
         self.animate(dt)                      

@@ -1,7 +1,7 @@
 import pygame, sys                   
 from settings import *               # Nhập các thiết lập từ file settings, như WINDOW_WIDTH và WINDOW_HEIGHT
 from pytmx.util_pygame import load_pygame  # Nhập hàm load_pygame để tải bản đồ TMX
-from tiles import Tile               # Nhập lớp Tile để tạo các ô (tile) trong game
+from tiles import Tile, CollisionTile               # Nhập lớp Tile để tạo các ô (tile) trong game
 from player import Player            # Nhập lớp Player
 from pygame.math import Vector2 as vector 
 
@@ -37,6 +37,7 @@ class Main:
                                       # Thiết lập đồng hồ để điều khiển tốc độ khung hình cho trò chơi
 
         self.all_sprites = AllSprites()  # Tạo nhóm `all_sprites` để quản lý tất cả các sprite trong trò chơi
+        self.collision_sprites = pygame.sprite.Group() #Tạo nhóm `collision tile` để quản lý các tile có thể collision
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
 
     def setup(self):
@@ -44,7 +45,7 @@ class Main:
 
         #Main Layer
         for x, y, surf in tmx_map.get_layer_by_name('Level').tiles():
-            Tile((x * 64, y * 64), surf, self.all_sprites, LAYER['main'])  # Tạo một tile ở vị trí (x * 64, y * 64) với hình ảnh `surf` và thêm vào nhóm `all_sprites`
+            CollisionTile((x * 64, y * 64), surf, [self.all_sprites,self.collision_sprites])  # Tạo collision tile có diện tích (x * 64, y * 64) 
 
         #Layer
         for layer in ['BG', 'BG Detail', 'FG Detail Bottom', 'FG Detail Top']:  #In ra tất cả các layer trong map
