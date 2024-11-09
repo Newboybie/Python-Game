@@ -90,6 +90,7 @@ class Player(pygame.sprite.Sprite):
 
         self.pos.y += self.direction.y * self.speed * dt
         self.rect.y = round(self.pos.y)        # Cập nhật vị trí y của `rect` với giá trị y mới đã được làm tròn
+        self.collision('vertical')             # Kiểm tra collison vertical axit
 
     def collision(self, direction):             # Kiểm tra các điều kiện collision
         for sprite in self.collision_sprites.sprites():
@@ -103,8 +104,14 @@ class Player(pygame.sprite.Sprite):
                     if self.rect.right >= sprite.rect.left and self.old_rect.right <= sprite.old_rect.left:  # Kiểm tra hướng va chạm
                         self.rect.right = sprite.rect.left
                     self.pos.x = self.rect.x    # Cập nhật vị trí mới
-                else:
-                    pass
+                else:                           # Collision theo vertical axis
+                    # Bottom collison
+                    if self.rect.bottom >= sprite.rect.top and self.old_rect.bottom <= sprite.old_rect.top:
+                        self.rect.bottom = sprite.rect.top
+                    # Top collison
+                    if self.rect.top <= sprite.rect.bottom and self.old_rect.top >= sprite.old_rect.bottom:
+                        self.rect.top = sprite.rect.bottom
+                    self.pos.y = self.rect.y
 
     def update(self, dt):
         self.old_rect = self.rect.copy()       # Cập nhật liên tục trạng thái của player
