@@ -82,7 +82,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0              
 
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] and self.on_floor:
             self.direction.y = -self.jump_speed
 
         if keys[pygame.K_s]:
@@ -117,11 +117,16 @@ class Player(pygame.sprite.Sprite):
                     # Bottom collison
                     if self.rect.bottom >= sprite.rect.top and self.old_rect.bottom <= sprite.old_rect.top:
                         self.rect.bottom = sprite.rect.top
+                        self.on_floor = True
                     # Top collison
                     if self.rect.top <= sprite.rect.bottom and self.old_rect.top >= sprite.old_rect.bottom:
                         self.rect.top = sprite.rect.bottom
                     self.pos.y = self.rect.y
+                    self.direction.y = 0        # Khi va chạm theo chiều dọc, dừng chuyển động dọc (y) của nhân vật   
 
+        if self.on_floor and self.direction.y != 0:
+            self.on_floor = False
+        
     def update(self, dt):
         self.old_rect = self.rect.copy()       # Cập nhật liên tục trạng thái của player
         self.input()                           
