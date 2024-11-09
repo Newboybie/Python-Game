@@ -30,6 +30,26 @@ class Player(pygame.sprite.Sprite):
         self.on_floor = False
         self.duck = False
 
+    def get_status(self):                       # Hàm lấy trạng thái hiện tại của player
+        # Đứng yên
+        if self.direction.x == 0 and self.on_floor:
+            self.status = self.status.split('_')[0] + '_idle'
+        # Nhảy
+        if self.direction.y != 0 and not self.on_floor:
+            self.status = self.status.split('_')[0] + '_jump'
+
+    def check_contact(self):
+        # Tạo một hình chữ nhật nhỏ dưới đáy của nhân vật để kiểm tra va chạm với sàn
+        bottom_rect = pygame.Rect(0, 0, self.rect.width, 5)  # Hình chữ nhật rộng bằng nhân vật, cao 5 pixel
+        bottom_rect.midtop = self.rect.midbottom  # Đặt hình chữ nhật nhỏ này ngay dưới chân của nhân vật
+    
+        # Kiểm tra va chạm với từng sprite trong nhóm sprite cho phép va chạm
+        for sprite in self.collision_sprites.sprites():
+            if sprite.rect.colliderect(bottom_rect):  # Nếu hình chữ nhật nhỏ chạm với sprite nào đó
+                if self.direction.y > 0:  # Nếu nhân vật đang rơi xuống
+                    self.on_floor = True  # Đánh dấu rằng nhân vật đã tiếp xúc với sàn
+
+
     def import_assets(self, path):
         self.animations = {}  # Tạo một từ điển trống để lưu các animation theo từng tên thư mục.
     
@@ -77,8 +97,10 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_d]:                  
             self.direction.x = 1
+            self.status = 'right'
         elif keys[pygame.K_a]:                 
             self.direction.x = -1
+            self.status = 'left'
         else:
             self.direction.x = 0              
 
@@ -129,6 +151,8 @@ class Player(pygame.sprite.Sprite):
         
     def update(self, dt):
         self.old_rect = self.rect.copy()       # Cập nhật liên tục trạng thái của player
-        self.input()                           
+        self.input()   
+        self.get_status()                  
         self.move(dt)   
+        self.check_contact()
         self.animate(dt)                      
