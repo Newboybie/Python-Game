@@ -135,8 +135,8 @@ class Player(pygame.sprite.Sprite):
             y_offset = vector(0, -16) if not self.duck else vector(0, 10)                   # Điều chỉnh vị trí xuất hiện
             self.shoot(pos + y_offset, direction, self)
 
-            self.can_shoot = False
-            self.shoot_time = pygame.time.get_ticks()        
+            self.can_shoot = False                      # Đặt can_shoot thành False để không thể bắn tiếp ngay lập tức
+            self.shoot_time = pygame.time.get_ticks()   # Cập nhật shoot_time với thời gian hiện tại        
 
     def move(self, dt):
         if self.duck and self.on_floor:
