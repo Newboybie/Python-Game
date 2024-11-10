@@ -73,6 +73,10 @@ class Main:
                 border_rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
                 self.platform_border_rect.append(border_rect)
 
+    def bullet_collision(self):                      # Hàm phá hủy đạn khi va chạm vào sprites nhất định
+        for obs in self.collision_sprites.sprites():
+            pygame.sprite.spritecollide(obs, self.bullet_sprites, True)
+
     def plarform_collisions(self):                   # Hàm giới hạn khu vực di chuyển của platform
         for platform in self.platform_sprites.sprites():  
             for border in self.platform_border_rect:
@@ -105,7 +109,7 @@ class Main:
 
             self.plarform_collisions()
             self.all_sprites.update(dt)                 # Cập nhật trạng thái của tất cả sprite trong nhóm `all_sprites`
-            #self.all_sprites.draw(self.display_surface) # Vẽ tất cả sprite lên màn hình `display_surface`
+            self.bullet_collision()                     # Phá hủy đạn đã va chạm
             self.all_sprites.custom_draw(self.player)   # Vẽ tất cả sprite bằng custom_draw với vị trí của người chơi làm trung tâm
             pygame.display.update()                     # Cập nhật màn hình với các thay đổi đã thực hiện
 
