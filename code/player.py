@@ -34,6 +34,15 @@ class Player(pygame.sprite.Sprite):
 
         #Interaction
         self.shoot = shoot
+        self.can_shoot = True    
+        self.shoot_time = None           # Thời gian lần bắn cuối, ban đầu là None (chưa bắn)
+        self.cooldown = 200              # Thời gian chờ (cooldown) giữa hai lần bắn, tính bằng milliseconds (200 ms)
+
+    def shoot_timer(self):
+        if not self.can_shoot:                  # Nếu player chưa thể bắn (can_shoot là False)
+            current_time = pygame.time.get_ticks()  # Lấy thời gian hiện tại (tính từ khi chương trình bắt đầu chạy)
+            if current_time - self.shoot_time > self.cooldown:   # Nếu thời gian chờ đã kết thúc
+                self.can_shoot = True           # Cho phép bắn (can_shoot là True)
 
     def get_status(self):                       # Hàm lấy trạng thái hiện tại của player
         # Đứng yên
@@ -120,10 +129,14 @@ class Player(pygame.sprite.Sprite):
             self.duck = False  
 
         #Shooting
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and self.can_shoot:
             direction = vector(1, 0) if self.status.split('_')[0]== 'right' else vector(-1, 0)  # Bắn theo hướng nhìn 
-            pos = self.rect.center + direction * 50                          # Điều chỉnh vị trí xuất hiện
-            self.shoot(pos, direction, self)        
+            pos = self.rect.center + direction * 50  
+            y_offset = vector(0, -16) if not self.duck else vector(0, 10)                   # Điều chỉnh vị trí xuất hiện
+            self.shoot(pos + y_offset, direction, self)
+
+            self.can_shoot = False
+            self.shoot_time = pygame.time.get_ticks()        
 
     def move(self, dt):
         if self.duck and self.on_floor:
@@ -181,4 +194,5 @@ class Player(pygame.sprite.Sprite):
         self.get_status()                  
         self.move(dt)   
         self.check_contact()
-        self.animate(dt)                      
+        self.animate(dt)       
+        self.shoot_timer()          # Gọi hàm shoot_timer để kiểm tra và cập nhật khả năng bắn của player nếu cần               
