@@ -1,7 +1,7 @@
 import pygame, sys                   
 from settings import *               # Nhập các thiết lập từ file settings, như WINDOW_WIDTH và WINDOW_HEIGHT
 from pytmx.util_pygame import load_pygame  # Nhập hàm load_pygame để tải bản đồ TMX
-from tiles import Tile, CollisionTile               # Nhập lớp Tile để tạo các ô (tile) trong game
+from tiles import Tile, CollisionTile, MovingFlatform               # Nhập lớp Tile để tạo các ô (tile) trong game
 from player import Player            # Nhập lớp Player
 from pygame.math import Vector2 as vector 
 
@@ -38,6 +38,7 @@ class Main:
 
         self.all_sprites = AllSprites()  # Tạo nhóm `all_sprites` để quản lý tất cả các sprite trong trò chơi
         self.collision_sprites = pygame.sprite.Group() #Tạo nhóm `collision tile` để quản lý các tile có thể collision
+        self.platform_sprites = pygame.sprite.Group()  #Tạo nhóm `platform` để quản lý các tile có thể di chuyen
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
 
     def setup(self):
@@ -57,6 +58,13 @@ class Main:
         for obj in tmx_map.get_layer_by_name('Entities'):
             if obj.name == 'Player':
                 self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player', self.collision_sprites)   #In ra player tại vị trí xuất phát(Entities có name = player)
+
+        #Flatforms
+        for obj in tmx_map.get_layer_by_name('Platforms'):
+            if obj.name == 'Platform':
+                MovingFlatform((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites, self.platform_sprites])
+            else:
+                pass
 
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát

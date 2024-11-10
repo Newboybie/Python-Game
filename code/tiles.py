@@ -1,5 +1,6 @@
 import pygame                     
-from settings import *             
+from settings import *      
+from pygame.math import Vector2 as vector       
 
 # Định nghĩa lớp Tile kế thừa từ pygame.sprite.Sprite, để tạo các ô (tile) trong trò chơi
 class Tile(pygame.sprite.Sprite):
@@ -16,3 +17,18 @@ class CollisionTile(Tile):           # Tạo lớp Collisiontile từ Tile để
     def __init__(self, pos, surf, groups):
         super().__init__(pos, surf, groups, LAYER['main'])
         self.old_rect = self.rect.copy()        # Biến theo dõi vị trí hiện tại của tile 
+
+
+class MovingFlatform(CollisionTile):
+    def __init__(self, pos, surf, groups):
+        super().__init__(pos, surf, groups)
+
+        #Moving flatform
+        self.direction = vector(0, -1)
+        self.speed = 20
+        self.pos = vector(self.rect.topleft)
+
+    def update(self, dt):
+        self.old_rect = self.rect.copy()     # Biến theo dõi vị trí hiện tại của tile 
+        self.pos.y += self.direction.y * self.speed * dt   # Di chuyển lên với speed
+        self.rect.topleft = (round(self.pos.x), round(self.pos.y))  # Cập nhật vị trí của `rect` theo tọa độ hiện tại của `pos`, làm tròn giá trị `x` và `y` để đảm bảo vị trí là một số nguyên (pixel).
