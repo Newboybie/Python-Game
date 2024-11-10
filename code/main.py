@@ -80,7 +80,10 @@ class Main:
                         platform.rect.bottom = border.top
                         platform.pos.y = platform.rect.y
                         platform.direction.y = -1    # Thay đổi hướng di chuyển
-
+            if platform.rect.colliderect(self.player.rect) and self.player.rect.centery > platform.rect.centery:  # Nếu đáy của platform chạm vào player, đổi hướng ngay lập tức
+                platform.rect.bottom = self.player.rect.top
+                platform.pos.y = platform.rect.y
+                platform.direction.y = -1
 
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
