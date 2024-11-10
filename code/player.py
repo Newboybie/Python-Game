@@ -24,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.old_rect = self.rect.copy()        # Lưu trữ vị trí hiện tại của player 
         self.collision_sprites = collision_sprites  
 
+        self.moving_floor = None                # Đặt mặc định là None để xác định xem player có đang đứng trên sàn chuyển động không
+
         #Vertical movement
         self.gravity = 15
         self.jump_speed = 1200
@@ -51,6 +53,8 @@ class Player(pygame.sprite.Sprite):
             if sprite.rect.colliderect(bottom_rect):  # Nếu hình chữ nhật nhỏ chạm với sprite nào đó
                 if self.direction.y > 0:  # Nếu nhân vật đang rơi xuống
                     self.on_floor = True  # Đánh dấu rằng nhân vật đã tiếp xúc với sàn
+                if hasattr(sprite, 'direction'):
+                    self.moving_floor = sprite    # Gán sprite có thuộc tính 'direction' (tức là sàn có thể chuyển động) vào `self.moving_floor`
 
 
     def import_assets(self, path):
@@ -123,8 +127,18 @@ class Player(pygame.sprite.Sprite):
 
         self.direction.y += self.gravity
         self.pos.y += self.direction.y * dt
+ 
+        # Nếu player đang đứng trên sàn di chuyển và cả sàn lẫn player đang di chuyển xuống
+        if self.moving_floor and self.moving_floor.direction.y > 0 and self.direction.y > 0:
+            self.direction.y = 0                 # Dừng chuyển động dọc của player
+            self.rect.bottom = self.moving_floor.rect.top  # Đặt đáy của player trùng với đỉnh của sàn
+            self.pos.y = self.rect.y             # Cập nhật vị trí `pos.y` theo `rect.y`
+            self.on_floor = True                 # Đặt `on_floor` thành True để xác nhận player đang đứng trên sàn
+
+
         self.rect.y = round(self.pos.y)        # Cập nhật vị trí y của `rect` với giá trị y mới đã được làm tròn
         self.collision('vertical')             # Kiểm tra collison vertical axit
+        self.moving_floor = None                 # Đặt lại `self.moving_floor` về None để xác định lại trong lần kiểm tra tiếp theo
 
     def collision(self, direction):             # Kiểm tra các điều kiện collision
         for sprite in self.collision_sprites.sprites():
