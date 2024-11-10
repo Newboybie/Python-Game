@@ -60,11 +60,27 @@ class Main:
                 self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player', self.collision_sprites)   #In ra player tại vị trí xuất phát(Entities có name = player)
 
         #Flatforms
+        self.platform_border_rect = []
         for obj in tmx_map.get_layer_by_name('Platforms'):
             if obj.name == 'Platform':
                 MovingFlatform((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites, self.platform_sprites])
             else:
-                pass
+                border_rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                self.platform_border_rect.append(border_rect)
+
+    def plarform_collisions(self):                   # Hàm giới hạn khu vực di chuyển của platform
+        for platform in self.platform_sprites.sprites():  
+            for border in self.platform_border_rect:
+                if platform.rect.colliderect(border):
+                    if platform.direction.y < 0:     # Nếu platform chạm tới giới hạn trên(border up)
+                        platform.rect.top = border.bottom
+                        platform.pos.y = platform.rect.y
+                        platform.direction.y = 1     # Thay đổi hướng di chuyển
+                    else:                            # Nếu platform chạm tới giới hạn dưới(border down)
+                        platform.rect.bottom = border.top
+                        platform.pos.y = platform.rect.y
+                        platform.direction.y = -1    # Thay đổi hướng di chuyển
+
 
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
@@ -76,6 +92,7 @@ class Main:
             dt = self.clock.tick() / 1000  # Điều chỉnh tốc độ khung hình và tính thời gian giữa các khung hình, đổi sang giây
             self.display_surface.fill((249, 131, 103))  # Đổ màu nền cho màn hình
 
+            self.plarform_collisions()
             self.all_sprites.update(dt)                 # Cập nhật trạng thái của tất cả sprite trong nhóm `all_sprites`
             #self.all_sprites.draw(self.display_surface) # Vẽ tất cả sprite lên màn hình `display_surface`
             self.all_sprites.custom_draw(self.player)   # Vẽ tất cả sprite bằng custom_draw với vị trí của người chơi làm trung tâm

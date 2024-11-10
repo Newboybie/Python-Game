@@ -19,13 +19,13 @@ class CollisionTile(Tile):           # Tạo lớp Collisiontile từ Tile để
         self.old_rect = self.rect.copy()        # Biến theo dõi vị trí hiện tại của tile 
 
 
-class MovingFlatform(CollisionTile):
+class MovingFlatform(CollisionTile):    #Tạo lớp Platfomt từ CollisonTile để quản lý các tile có thể di chuyen
     def __init__(self, pos, surf, groups):
         super().__init__(pos, surf, groups)
 
         #Moving flatform
         self.direction = vector(0, -1)
-        self.speed = 20
+        self.speed = 200
         self.pos = vector(self.rect.topleft)
 
     def update(self, dt):
