@@ -5,7 +5,7 @@ from pygame.math import Vector2 as vector
 
 # Định nghĩa lớp Player
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, group, path, collision_sprites):
+    def __init__(self, pos, group, path, collision_sprites, shoot):
         super().__init__(group)    # Khởi tạo lớp cơ sở (Sprite) và thêm player vào nhóm sprite `group` được truyền vào
 
         self.import_assets(path)               # Lấy asset cho player tại path(đường dẫn)
@@ -31,6 +31,9 @@ class Player(pygame.sprite.Sprite):
         self.jump_speed = 1200
         self.on_floor = False
         self.duck = False
+
+        #Interaction
+        self.shoot = shoot
 
     def get_status(self):                       # Hàm lấy trạng thái hiện tại của player
         # Đứng yên
@@ -114,7 +117,13 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_s]:
             self.duck = True
         else:
-            self.duck = False          
+            self.duck = False  
+
+        #Shooting
+        if keys[pygame.K_SPACE]:
+            direction = vector(1, 0) if self.status.split('_')[0]== 'right' else vector(-1, 0)  # Bắn theo hướng nhìn 
+            pos = self.rect.center + direction * 50                          # Điều chỉnh vị trí xuất hiện
+            self.shoot(pos, direction, self)        
 
     def move(self, dt):
         if self.duck and self.on_floor:
