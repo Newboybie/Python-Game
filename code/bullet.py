@@ -31,3 +31,17 @@ class Bullet(pygame.sprite.Sprite):
 
         if pygame.time.get_ticks() - self.start_time > 1000:       # Xóa đạn sau 1s
             self.kill()
+
+class FireAnimation(pygame.sprite.Sprite):
+    def __init__(self, entity, surf_list, direction, groups):
+        super().__init__(groups)
+        self.entity = entity
+
+        self.frames = surf_list
+        if direction.x < 0:
+            self.frames = [pygame.transform.flip(frame, True, False) for frame in self.frames]
+        
+        self.frame_index = 0
+        self.image = self.frames[self.frame_index]
+        self.rect= self.image.get_rect(center = self.entity.rect.center)
+        self.z = LAYER['main']

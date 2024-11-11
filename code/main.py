@@ -3,7 +3,7 @@ from settings import *               # Nhập các thiết lập từ file setti
 from pytmx.util_pygame import load_pygame  # Nhập hàm load_pygame để tải bản đồ TMX
 from tiles import Tile, CollisionTile, MovingFlatform               # Nhập lớp Tile để tạo các ô (tile) trong game
 from player import Player            # Nhập lớp Player
-from bullet import Bullet
+from bullet import Bullet, FireAnimation
 from pygame.math import Vector2 as vector 
 
 # Định nghĩa lớp AllSprites kế thừa từ pygame.sprite.Group, dùng để quản lý các sprite và vẽ chúng lên màn hình
@@ -45,6 +45,9 @@ class Main:
 
         # Bullet images
         self.bullet_surf = pygame.image.load('D:/Python-Game/graphics/bullet.png').convert_alpha()    # Tạo hình sprites của bullet
+        self.fire_surfs = [
+            pygame.image.load('D:/Python-Game/graphics/fire/0.png').convert_alpha(),
+            pygame.image.load('D:/Python-Game/graphics/fire/1.png').convert_alpha()   ]
 
     def setup(self):
         tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX
@@ -96,6 +99,7 @@ class Main:
 
     def shoot(self, pos, direction, entity):         # Hàm quản lý hành động bắn
         Bullet(pos, self.bullet_surf, direction, [self.all_sprites, self.bullet_sprites])
+        FireAnimation(entity, self.fire_surfs, direction, self.all_sprites)
 
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
