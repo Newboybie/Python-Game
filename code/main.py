@@ -94,7 +94,7 @@ class Main:
             if obj.name == 'Player':
                 self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player', self.collision_sprites, self.shoot)   #In ra player tại vị trí xuất phát(Entities có name = player)
             if obj.name == 'Enemy':
-                Enemy((obj.x, obj.y),'D:/Python-Game/graphics/enemies',self.all_sprites, self.shoot, self.player, collision_sprites=None)    
+                Enemy((obj.x, obj.y),'D:/Python-Game/graphics/enemies',self.all_sprites, self.shoot, self.player, self.collision_sprites)    
             
         #Flatforms
         self.platform_border_rect = []
