@@ -31,6 +31,15 @@ class Entity(pygame.sprite.Sprite):
         self.cooldown = 200              # Thời gian chờ (cooldown) giữa hai lần bắn, tính bằng milliseconds (200 ms)
         self.duck = False
 
+    def animate(self, dt):                      # Hàm tạo animate
+        self.frame_index += 7 * dt              # Tốc độ lặp animation            
+        current_animations = self.animations[self.status]   
+        if self.frame_index >= len(current_animations):   # Lặp lại từ đầu nếu đã tới frame cuối
+            self.frame_index = 0
+        
+        self.image = current_animations[int(self.frame_index)]  # Lấy image của frame hiện tại
+
+
     def shoot_timer(self):
         if not self.can_shoot:                  # Nếu player chưa thể bắn (can_shoot là False)
             current_time = pygame.time.get_ticks()  # Lấy thời gian hiện tại (tính từ khi chương trình bắt đầu chạy)
@@ -66,11 +75,4 @@ class Entity(pygame.sprite.Sprite):
                     # Thêm Surface đã tải vào danh sách của thư mục tương ứng trong self.animations
                     self.animations[key].append(surf)
 
-    def animate(self, dt):                      # Hàm tạo animate
-        self.frame_index += 7 * dt              # Tốc độ lặp animation            
-        current_animations = self.animations[self.status]   
-        if self.frame_index >= len(current_animations):   # Lặp lại từ đầu nếu đã tới frame cuối
-            self.frame_index = 0
-        
-        self.image = current_animations[int(self.frame_index)]  # Lấy image của frame hiện tại
 

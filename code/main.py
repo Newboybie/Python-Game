@@ -3,6 +3,7 @@ from settings import *               # Nhập các thiết lập từ file setti
 from pytmx.util_pygame import load_pygame  # Nhập hàm load_pygame để tải bản đồ TMX
 from tiles import Tile, CollisionTile, MovingFlatform               # Nhập lớp Tile để tạo các ô (tile) trong game
 from player import Player            # Nhập lớp Player
+from enemy import Enemy
 from bullet import Bullet, FireAnimation
 from pygame.math import Vector2 as vector 
 
@@ -92,7 +93,9 @@ class Main:
         for obj in tmx_map.get_layer_by_name('Entities'):
             if obj.name == 'Player':
                 self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player', self.collision_sprites, self.shoot)   #In ra player tại vị trí xuất phát(Entities có name = player)
-
+            if obj.name == 'Enemy':
+                Enemy((obj.x, obj.y),'D:/Python-Game/graphics/enemies',self.all_sprites, self.shoot, self.player, collision_sprites=None)    
+            
         #Flatforms
         self.platform_border_rect = []
         for obj in tmx_map.get_layer_by_name('Platforms'):
