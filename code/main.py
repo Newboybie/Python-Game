@@ -13,11 +13,37 @@ class AllSprites(pygame.sprite.Group):
         self.display_surface = pygame.display.get_surface()  # Lấy bề mặt hiển thị hiện tại của Pygame
         self.offset = vector()                              # Khởi tạo vector để điều chỉnh vị trí hiển thị của các sprite
 
+        # Sky
+        self.fg_sky = pygame.image.load('D:/Python-Game/graphics/sky/fg_sky.png').convert_alpha()
+        self.bg_sky = pygame.image.load('D:/Python-Game/graphics/sky/bg_sky.png').convert_alpha()
+        tmx_map = load_pygame('D:/Python-Game/data/map.tmx')
+
+        self.sky_width = self.bg_sky.get_width()
+        # Lấy chiều rộng của ảnh nền bầu trời xa, dùng để tính toán số lần lặp ảnh bầu trời để phủ hết bề rộng màn hình
+
+        self.padding = WINDOW_WIDTH / 2
+        # Thiết lập giá trị đệm, bằng một nửa chiều rộng của cửa sổ trò chơi, để hình ảnh bầu trời lặp lại liền mạch và cân đối
+
+        map_width = tmx_map.tilewidth * tmx_map.width + (2 * self.padding)
+        # Tính toán tổng chiều rộng của bản đồ, cộng thêm khoảng đệm ở hai bên để đảm bảo bầu trời phủ kín màn hình khi di chuyển
+
+        self.sky_num = int(map_width // self.sky_width)
+        # Tính số lần cần lặp lại ảnh bầu trời để đủ phủ kín bề ngang của bản đồ, làm tròn xuống số nguyên
+
+
     # Phương thức để vẽ các sprite với một khoảng bù (offset) để tạo hiệu ứng theo dõi
     def custom_draw(self, player):
         # Tính toán offset dựa trên vị trí của player
         self.offset.x = player.rect.centerx - WINDOW_WIDTH / 2
         self.offset.y = player.rect.centery - WINDOW_HEIGHT / 2
+
+        for x in range(self.sky_num):  # Lặp lại bầu trời đủ số lần để phủ kín chiều rộng bản đồ
+            x_pos = -self.padding + (x * self.sky_width)  # Tính toán vị trí x của mỗi lần vẽ bầu trời
+            # Vẽ nền trời xa (background sky) với vị trí đã điều chỉnh bằng offset chia 2.5
+            self.display_surface.blit(self.bg_sky, (x_pos - self.offset.x / 2.5, 800 - self.offset.y / 2.5))
+            # Vẽ nền trời gần (foreground sky) với vị trí đã điều chỉnh bằng offset chia 2
+            self.display_surface.blit(self.fg_sky, (x_pos - self.offset.x / 2, 800 - self.offset.y / 2))
+
 
         # Vẽ từng sprite với offset
         for sprite in sorted(self.sprites(), key= lambda sprite: sprite.z): # In ra từng sprite ứng với thứ tự của layer chứa sprite
