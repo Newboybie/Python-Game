@@ -60,6 +60,10 @@ class FireAnimation(pygame.sprite.Sprite):
             self.kill()
         else:
             self.image = self.frames[int(self.frame_index)]
+
+    def move(self):                                  # Hàm đảm bảo animation đi liền với người chơi
+        self.rect.center = self.entity.rect.center + self.offset
     
     def update(self, dt):
         self.animate(dt)
+        self.move()
