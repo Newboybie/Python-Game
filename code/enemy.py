@@ -17,7 +17,26 @@ class Enemy(Entity):
             self.status = 'left'
         else:
             self.status = 'right'
+        
+    def check_fire(self):                                     # Hàm kiểm soát khả năng shooting của kẻ địch
+        enemy_pos = vector(self.rect.center)
+        player_pos = vector(self.player.rect.center)
+
+        distance = (player_pos - enemy_pos).magnitude()
+        same_y = True if self.rect.top - 20 < player_pos.y < self.rect.bottom + 20 else False     # Kiểm tra vị trí người chơi có nằm trong tầm bắn không
+
+        if distance < 600 and same_y and self.can_shoot:                                           
+            bullet_direction = vector(1, 0) if self.status == 'right' else vector(-1, 0)
+            y_offset = vector(0, -16)
+            pos = self.rect.center + bullet_direction * 40
+            self.shoot(pos + y_offset, bullet_direction, self)
+
+            self.can_shoot = False
+            self.shoot_time = pygame.time.get_ticks()
 
     def update(self,dt):
         self.get_status()
         self.animate(dt)
+
+        self.shoot_timer()
+        self.check_fire()
