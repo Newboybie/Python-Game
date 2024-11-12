@@ -43,6 +43,7 @@ class Player(Entity):
                     self.on_floor = True  # Đánh dấu rằng nhân vật đã tiếp xúc với sàn
                 if hasattr(sprite, 'direction'):
                     self.moving_floor = sprite    # Gán sprite có thuộc tính 'direction' (tức là sàn có thể chuyển động) vào `self.moving_floor`
+        
 
     def check_death(self):
         if self.health <= 0:
@@ -133,10 +134,12 @@ class Player(Entity):
     def update(self, dt):
         self.old_rect = self.rect.copy()       # Cập nhật liên tục trạng thái của player
         self.input()   
-        self.get_status()                  
+        self.get_status() 
+                         
         self.move(dt)   
         self.check_contact()
-        self.animate(dt)       
+        self.animate(dt)  
+
         self.shoot_timer()          # Gọi hàm shoot_timer để kiểm tra và cập nhật khả năng bắn của player nếu cần               
         # Death
         self.check_death()

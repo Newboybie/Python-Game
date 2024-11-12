@@ -89,7 +89,7 @@ class Main:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
                 Tile((x * 64, y * 64), surf, self.all_sprites, LAYER[layer]) 
             
-        
+         
         #Objects
         for obj in tmx_map.get_layer_by_name('Entities'):
             if obj.name == 'Player':                  #In ra player tại vị trí xuất phát(Entities có name = player)
@@ -122,7 +122,7 @@ class Main:
             pygame.sprite.spritecollide(obs, self.bullet_sprites, True)
 
         # Entities
-        for sprites in self.vunerable_sprites.sprites():         # Hàm kiểm tra nếu sprites trong nhóm vunerable bị đạn chạm vào
+        for sprites in self.vunerable_sprites.sprites():         # Hàm kiểm tra nếu sprites trong nhóm vunerable bị đạn chạm
             if pygame.sprite.spritecollide(sprites, self.bullet_sprites, True):
                 sprites.damage()
 

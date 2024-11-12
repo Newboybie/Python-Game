@@ -1,3 +1,4 @@
+from math import sin
 import os
 import pygame
 from pygame.math import Vector2 as vector
@@ -42,6 +43,11 @@ class Entity(pygame.sprite.Sprite):
         
         self.image = current_animations[int(self.frame_index)]  # Lấy image của frame hiện tại
 
+    def blink(self):  # Nháy trắng
+        mask = pygame.mask.from_surface(self.image)
+        white_surf = mask.to_surface()
+        white_surf.set_colorkey((0, 0, 0))
+        self.image = white_surf
 
     def shoot_timer(self):
         if not self.can_shoot:                  # Nếu player chưa thể bắn (can_shoot là False)
@@ -50,6 +56,7 @@ class Entity(pygame.sprite.Sprite):
                 self.can_shoot = True           # Cho phép bắn (can_shoot là True)
   
     def damage(self):                           # Hàm nhận sát thương khi bị bắn trúng
+        self.blink()
         self.health -= 1
 
     def check_death(self):                      # Hàm tiêu diệt khi hết máu
