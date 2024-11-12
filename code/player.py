@@ -1,3 +1,4 @@
+import sys
 import pygame                      
 from settings import *             
 from pygame.math import Vector2 as vector 
@@ -16,6 +17,8 @@ class Player(Entity):
         self.gravity = 15
         self.jump_speed = 1200
         self.on_floor = False
+
+        self.health = 10                        # Override health để tăng máu cho người chơi
 
     def get_status(self):                       # Hàm lấy trạng thái hiện tại của player
         # Đứng yên
@@ -40,6 +43,11 @@ class Player(Entity):
                     self.on_floor = True  # Đánh dấu rằng nhân vật đã tiếp xúc với sàn
                 if hasattr(sprite, 'direction'):
                     self.moving_floor = sprite    # Gán sprite có thuộc tính 'direction' (tức là sàn có thể chuyển động) vào `self.moving_floor`
+
+    def check_death(self):
+        if self.health <= 0:
+            pygame.quit()
+            sys.exit()
 
     def input(self):
         # Nhận input người dùng để xác định hướng di chuyển
