@@ -123,7 +123,7 @@ class Main:
 
         # Entities
         for sprites in self.vunerable_sprites.sprites():         # Hàm kiểm tra nếu sprites trong nhóm vunerable bị đạn chạm
-            if pygame.sprite.spritecollide(sprites, self.bullet_sprites, True):
+            if pygame.sprite.spritecollide(sprites, self.bullet_sprites, True, pygame.sprite.collide_mask):
                 sprites.damage()
 
     def plarform_collisions(self):                   # Hàm giới hạn khu vực di chuyển của platform

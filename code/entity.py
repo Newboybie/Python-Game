@@ -14,7 +14,8 @@ class Entity(pygame.sprite.Sprite):
         self.frame_index = 0
         self.status = 'right'
 
-        self.image = self.animations[self.status][self.frame_index]             
+        self.image = self.animations[self.status][self.frame_index]
+        self.mask = pygame.mask.from_surface(self.image)           
         self.rect = self.image.get_rect(topleft=pos)  # Tạo hình chữ nhật (rect) bao quanh `image` và đặt góc trên cùng bên trái tại vị trí `pos`
         self.old_rect = self.rect.copy()        # Lưu trữ vị trí hiện tại của player 
         
@@ -42,6 +43,7 @@ class Entity(pygame.sprite.Sprite):
             self.frame_index = 0
         
         self.image = current_animations[int(self.frame_index)]  # Lấy image của frame hiện tại
+        self.mask = pygame.mask.from_surface(self.image)
 
     def blink(self):  # Nháy trắng
         mask = pygame.mask.from_surface(self.image)
