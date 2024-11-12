@@ -73,6 +73,7 @@ class Player(Entity):
 
         #Shooting
         if keys[pygame.K_SPACE] and self.can_shoot:
+            self.shoot_sound.play()
             direction = vector(1, 0) if self.status.split('_')[0]== 'right' else vector(-1, 0)  # Bắn theo hướng nhìn 
             pos = self.rect.center + direction * 80
             y_offset = vector(0, -16) if not self.duck else vector(0, 10)                   # Điều chỉnh vị trí xuất hiện

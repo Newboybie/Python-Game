@@ -36,6 +36,12 @@ class Entity(pygame.sprite.Sprite):
         # Health
         self.health = 3
 
+        # Audio
+        self.hit_sound = pygame.mixer.Sound('D:/Python-Game/audio/hit.mp3')
+        self.hit_sound.set_volume(0.2)
+        self.shoot_sound = pygame.mixer.Sound('D:/Python-Game/audio/shoot.mp3')
+        self.shoot_sound.set_volume(0.4)
+
     def animate(self, dt):                      # Hàm tạo animate
         self.frame_index += 7 * dt              # Tốc độ lặp animation            
         current_animations = self.animations[self.status]   
@@ -59,6 +65,7 @@ class Entity(pygame.sprite.Sprite):
   
     def damage(self):                           # Hàm nhận sát thương khi bị bắn trúng
         self.blink()
+        self.hit_sound.play()
         self.health -= 1
 
     def check_death(self):                      # Hàm tiêu diệt khi hết máu

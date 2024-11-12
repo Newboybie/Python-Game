@@ -31,6 +31,7 @@ class Enemy(Entity):
             y_offset = vector(0, -16)
             pos = self.rect.center + bullet_direction * 80
             self.shoot(pos + y_offset, bullet_direction, self)
+            self.shoot_sound.play()
 
             self.can_shoot = False
             self.shoot_time = pygame.time.get_ticks()

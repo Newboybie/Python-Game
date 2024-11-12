@@ -82,6 +82,7 @@ class Main:
         
         # Music
         self.music = pygame.mixer.Sound('D:/Python-Game/audio/background.mp3')
+        self.music.set_volume(0.3)
         self.music.play(loops= -1)
 
     def setup(self):
