@@ -79,6 +79,10 @@ class Main:
         self.fire_surfs = [
             pygame.image.load('D:/Python-Game/graphics/fire/0.png').convert_alpha(),
             pygame.image.load('D:/Python-Game/graphics/fire/1.png').convert_alpha()   ]
+        
+        # Music
+        self.music = pygame.mixer.Sound('D:/Python-Game/audio/background.mp3')
+        self.music.play(loops= -1)
 
     def setup(self):
         tmx_map = load_pygame('D:/Python-Game/data/map.tmx')  # Tải bản đồ TMX
