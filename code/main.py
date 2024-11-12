@@ -6,6 +6,7 @@ from player import Player            # Nhập lớp Player
 from enemy import Enemy
 from bullet import Bullet, FireAnimation
 from pygame.math import Vector2 as vector 
+from overlay import Overlay
 
 # Định nghĩa lớp AllSprites kế thừa từ pygame.sprite.Group, dùng để quản lý các sprite và vẽ chúng lên màn hình
 class AllSprites(pygame.sprite.Group):
@@ -69,7 +70,9 @@ class Main:
         self.platform_sprites = pygame.sprite.Group()  #Tạo nhóm `platform` để quản lý các tile có thể di chuyen
         self.bullet_sprites = pygame.sprite.Group()    #Tạo nhóm `bullet` để quản lý bullet
         self.vunerable_sprites = pygame.sprite.Group()   #Tạo nhóm `vunerable` để quản lý các nhóm có thể bị tiêu diệt
+
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
+        self.overlay = Overlay(self.player)
 
         # Bullet images
         self.bullet_surf = pygame.image.load('D:/Python-Game/graphics/bullet.png').convert_alpha()    # Tạo hình sprites của bullet
@@ -161,6 +164,8 @@ class Main:
             self.all_sprites.update(dt)                 # Cập nhật trạng thái của tất cả sprite trong nhóm `all_sprites`
             self.bullet_collision()                     # Phá hủy đạn đã va chạm
             self.all_sprites.custom_draw(self.player)   # Vẽ tất cả sprite bằng custom_draw với vị trí của người chơi làm trung tâm
+            self.overlay.display()                      # Game UI/UX
+            
             pygame.display.update()                     # Cập nhật màn hình với các thay đổi đã thực hiện
 
 # Điểm khởi đầu của chương trình
