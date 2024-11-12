@@ -68,6 +68,7 @@ class Main:
         self.collision_sprites = pygame.sprite.Group() #Tạo nhóm `collision tile` để quản lý các tile có thể collision
         self.platform_sprites = pygame.sprite.Group()  #Tạo nhóm `platform` để quản lý các tile có thể di chuyen
         self.bullet_sprites = pygame.sprite.Group()    #Tạo nhóm `bullet` để quản lý bullet
+        self.vunerable_sprites = pygame.sprite.Group()   #Tạo nhóm `vunerable` để quản lý các nhóm có thể bị tiêu diệt
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
 
         # Bullet images
@@ -91,10 +92,21 @@ class Main:
         
         #Objects
         for obj in tmx_map.get_layer_by_name('Entities'):
-            if obj.name == 'Player':
-                self.player = Player((obj.x, obj.y), self.all_sprites, 'D:/Python-Game/graphics/player', self.collision_sprites, self.shoot)   #In ra player tại vị trí xuất phát(Entities có name = player)
-            if obj.name == 'Enemy':
-                Enemy((obj.x, obj.y),'D:/Python-Game/graphics/enemies',self.all_sprites, self.shoot, self.player, self.collision_sprites)    
+            if obj.name == 'Player':                  #In ra player tại vị trí xuất phát(Entities có name = player)
+                self.player = Player(
+                    pos= (obj.x, obj.y), 
+                    group= [self.all_sprites, self.vunerable_sprites], 
+                    path= 'D:/Python-Game/graphics/player', 
+                    collision_sprites= self.collision_sprites, 
+                    shoot= self.shoot)   
+            if obj.name == 'Enemy':                     #In ra Enemy tại vị trí xuất phát(Entities có name = Enemy)
+                Enemy(
+                    pos= (obj.x, obj.y),
+                    path= 'D:/Python-Game/graphics/enemies',
+                    groups= [self.all_sprites, self.vunerable_sprites], 
+                    shoot= self.shoot, 
+                    player= self.player, 
+                    collision_sprites= self.collision_sprites)    
             
         #Flatforms
         self.platform_border_rect = []
@@ -108,6 +120,11 @@ class Main:
     def bullet_collision(self):                      # Hàm phá hủy đạn khi va chạm vào sprites nhất định
         for obs in self.collision_sprites.sprites():
             pygame.sprite.spritecollide(obs, self.bullet_sprites, True)
+
+        # Entities
+        for sprites in self.vunerable_sprites.sprites():         # Hàm kiểm tra nếu sprites trong nhóm vunerable bị đạn chạm vào
+            if pygame.sprite.spritecollide(sprites, self.bullet_sprites, True):
+                sprites.damage()
 
     def plarform_collisions(self):                   # Hàm giới hạn khu vực di chuyển của platform
         for platform in self.platform_sprites.sprites():  

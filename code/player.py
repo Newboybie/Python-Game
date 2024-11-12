@@ -65,7 +65,7 @@ class Player(Entity):
         #Shooting
         if keys[pygame.K_SPACE] and self.can_shoot:
             direction = vector(1, 0) if self.status.split('_')[0]== 'right' else vector(-1, 0)  # Bắn theo hướng nhìn 
-            pos = self.rect.center + direction * 50  
+            pos = self.rect.center + direction * 80
             y_offset = vector(0, -16) if not self.duck else vector(0, 10)                   # Điều chỉnh vị trí xuất hiện
             self.shoot(pos + y_offset, direction, self)
 
@@ -130,3 +130,5 @@ class Player(Entity):
         self.check_contact()
         self.animate(dt)       
         self.shoot_timer()          # Gọi hàm shoot_timer để kiểm tra và cập nhật khả năng bắn của player nếu cần               
+        # Death
+        self.check_death()

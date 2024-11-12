@@ -31,6 +31,9 @@ class Entity(pygame.sprite.Sprite):
         self.cooldown = 200              # Thời gian chờ (cooldown) giữa hai lần bắn, tính bằng milliseconds (200 ms)
         self.duck = False
 
+        # Health
+        self.health = 3
+
     def animate(self, dt):                      # Hàm tạo animate
         self.frame_index += 7 * dt              # Tốc độ lặp animation            
         current_animations = self.animations[self.status]   
@@ -46,6 +49,13 @@ class Entity(pygame.sprite.Sprite):
             if current_time - self.shoot_time > self.cooldown:   # Nếu thời gian chờ đã kết thúc
                 self.can_shoot = True           # Cho phép bắn (can_shoot là True)
   
+    def damage(self):                           # Hàm nhận sát thương khi bị bắn trúng
+        self.health -= 1
+
+    def check_death(self):                      # Hàm tiêu diệt khi hết máu
+        if self.health <= 0:
+            self.kill()
+
     def import_assets(self, path):
         self.animations = {}  # Tạo một từ điển trống để lưu các animation theo từng tên thư mục.
     
