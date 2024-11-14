@@ -48,8 +48,8 @@ class FireAnimation(pygame.sprite.Sprite):
         self.image = self.frames[self.frame_index]   # Lấy hình ảnh của frame đầu tiên trong danh sách `frames`
         
         # Offset
-        x_offset = 60 if direction.x > 0 else -60
-        y_offset = 10 if entity.duck else -16
+        x_offset = 40 if direction.x > 0 else -40
+        y_offset = 3 if entity.duck else -3
         self.offset = vector(x_offset, y_offset)
 
         # Position
