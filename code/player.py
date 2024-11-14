@@ -76,7 +76,7 @@ class Player(Entity):
             self.shoot_sound.play()
             direction = vector(1, 0) if self.status.split('_')[0]== 'right' else vector(-1, 0)  # Bắn theo hướng nhìn 
             pos = self.rect.center + direction * 80
-            y_offset = vector(0, 3) if not self.duck else vector(0, 5)                   # Điều chỉnh vị trí xuất hiện
+            y_offset = vector(0, -1) if not self.duck else vector(0, 13)                   # Điều chỉnh vị trí xuất hiện
             self.shoot(pos + y_offset, direction, self)
 
             self.can_shoot = False                      # Đặt can_shoot thành False để không thể bắn tiếp ngay lập tức
