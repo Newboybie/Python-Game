@@ -49,7 +49,7 @@ class FireAnimation(pygame.sprite.Sprite):
         
         # Offset
         x_offset = 40 if direction.x > 0 else -40
-        y_offset = 3 if entity.duck else -3
+        y_offset = 15 if entity.duck else 3
         self.offset = vector(x_offset, y_offset)
 
         # Position
