@@ -74,6 +74,9 @@ class Main:
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
         self.overlay = Overlay(self.player)
 
+        self.game_over = False  # Trạng thái ban đầu của game
+        self.font = pygame.font.Font(None, 40)  # Font chữ cho menu
+
         # Bullet images
         self.bullet_surf = pygame.image.load('D:/Python-Game/graphics/bullet.png').convert_alpha()    # Tạo hình sprites của bullet
         self.fire_surfs = [
@@ -154,7 +157,7 @@ class Main:
     def shoot(self, pos, direction, entity):         # Hàm quản lý hành động bắn
         Bullet(pos, self.bullet_surf, direction, [self.all_sprites, self.bullet_sprites])
         FireAnimation(entity, self.fire_surfs, direction, self.all_sprites)
-        
+
     def restart_game(self):
         """Khởi động lại trò chơi."""
         self.__init__()  # Reset lại trò chơi bằng cách khởi tạo lại lớp
@@ -198,6 +201,7 @@ class Main:
             pygame.quit()
             sys.exit()
 
+
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
             for event in pygame.event.get():  
@@ -206,13 +210,30 @@ class Main:
                     sys.exit()        # Thoát chương trình
 
             dt = self.clock.tick() / 1000  # Điều chỉnh tốc độ khung hình và tính thời gian giữa các khung hình, đổi sang giây
-            self.display_surface.fill((249, 131, 103))  # Đổ màu nền cho màn hình
+            # self.display_surface.fill((249, 131, 103))  # Đổ màu nền cho màn hình
+            #
+            # self.plarform_collisions()
+            # self.all_sprites.update(dt)                 # Cập nhật trạng thái của tất cả sprite trong nhóm `all_sprites`
+            # self.bullet_collision()                     # Phá hủy đạn đã va chạm
+            # self.all_sprites.custom_draw(self.player)   # Vẽ tất cả sprite bằng custom_draw với vị trí của người chơi làm trung tâm
+            # self.overlay.display()                      # Game UI/UX
 
-            self.plarform_collisions()
-            self.all_sprites.update(dt)                 # Cập nhật trạng thái của tất cả sprite trong nhóm `all_sprites`
-            self.bullet_collision()                     # Phá hủy đạn đã va chạm
-            self.all_sprites.custom_draw(self.player)   # Vẽ tất cả sprite bằng custom_draw với vị trí của người chơi làm trung tâm
-            self.overlay.display()                      # Game UI/UX
+            if not self.game_over:
+                self.display_surface.fill((249, 131, 103))
+
+                self.plarform_collisions()
+                self.all_sprites.update(dt)
+                self.bullet_collision()
+                self.all_sprites.custom_draw(self.player)
+                self.overlay.display()
+
+                # Kiểm tra điều kiện kết thúc game
+                if not self.player.alive:  # Nếu nhân vật chết
+                    self.game_over = True
+
+            # Khi game kết thúc, hiển thị menu
+            else:
+                self.draw_game_over_menu()
             
             pygame.display.update()                     # Cập nhật màn hình với các thay đổi đã thực hiện
 

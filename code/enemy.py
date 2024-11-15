@@ -28,7 +28,7 @@ class Enemy(Entity):
 
         if distance < 600 and same_y and self.can_shoot:                                           
             bullet_direction = vector(1, 0) if self.status == 'right' else vector(-1, 0)
-            y_offset = vector(0, -16)
+            y_offset = vector(0, -15)
             pos = self.rect.center + bullet_direction * 80
             self.shoot(pos + y_offset, bullet_direction, self)
             self.shoot_sound.play()

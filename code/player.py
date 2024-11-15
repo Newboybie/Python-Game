@@ -44,7 +44,7 @@ class Player(Entity):
                 if hasattr(sprite, 'direction'):
                     self.moving_floor = sprite    # Gán sprite có thuộc tính 'direction' (tức là sàn có thể chuyển động) vào `self.moving_floor`
         
-
+    
     def check_death(self):
         self.alive = True
         if self.health <= 0:
@@ -69,8 +69,9 @@ class Player(Entity):
         if keys[pygame.K_s] or keys[pygame.K_DOWN] :
             self.duck = True
         else:
-            self.duck = False   
+            self.duck = False  
 
+       
         #Shooting
         if keys[pygame.K_SPACE] and self.can_shoot:
             self.shoot_sound.play()
@@ -78,7 +79,7 @@ class Player(Entity):
             pos = self.rect.center + direction * 80
             y_offset = vector(0, -1) if not self.duck else vector(0, 13)                   # Điều chỉnh vị trí xuất hiện
             self.shoot(pos + y_offset, direction, self)
-
+            
             self.can_shoot = False                      # Đặt can_shoot thành False để không thể bắn tiếp ngay lập tức
             self.shoot_time = pygame.time.get_ticks()   # Cập nhật shoot_time với thời gian hiện tại        
 
