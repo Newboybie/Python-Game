@@ -45,7 +45,7 @@ class Player(Entity):
                     self.moving_floor = sprite    # Gán sprite có thuộc tính 'direction' (tức là sàn có thể chuyển động) vào `self.moving_floor`
         
 
-   def check_death(self):
+    def check_death(self):
         self.alive = True
         if self.health <= 0:
             self.alive = False
