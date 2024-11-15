@@ -45,31 +45,31 @@ class Player(Entity):
                     self.moving_floor = sprite    # Gán sprite có thuộc tính 'direction' (tức là sàn có thể chuyển động) vào `self.moving_floor`
         
 
-    def check_death(self):
+   def check_death(self):
+        self.alive = True
         if self.health <= 0:
-            pygame.quit()
-            sys.exit()
+            self.alive = False
 
     def input(self):
         # Nhận input người dùng để xác định hướng di chuyển
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_d]:                  
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:                  
             self.direction.x = 1
             self.status = 'right'
-        elif keys[pygame.K_a]:                 
+        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:                
             self.direction.x = -1
             self.status = 'left'
         else:
             self.direction.x = 0              
 
-        if keys[pygame.K_w] and self.on_floor:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.on_floor:
             self.direction.y = -self.jump_speed
 
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s] or keys[pygame.K_DOWN] :
             self.duck = True
         else:
-            self.duck = False  
+            self.duck = False   
 
         #Shooting
         if keys[pygame.K_SPACE] and self.can_shoot:
