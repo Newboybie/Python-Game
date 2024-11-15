@@ -154,6 +154,49 @@ class Main:
     def shoot(self, pos, direction, entity):         # Hàm quản lý hành động bắn
         Bullet(pos, self.bullet_surf, direction, [self.all_sprites, self.bullet_sprites])
         FireAnimation(entity, self.fire_surfs, direction, self.all_sprites)
+        
+    def restart_game(self):
+        """Khởi động lại trò chơi."""
+        self.__init__()  # Reset lại trò chơi bằng cách khởi tạo lại lớp
+
+    def draw_game_over_menu(self):
+        # Tải ảnh
+        background_img = pygame.image.load("D:/Python-Game/graphics/end_game/back_ground.jpg").convert_alpha()
+        restart_img = pygame.image.load("D:/Python-Game/graphics/end_game/restart.jpg").convert_alpha()
+        quit_img = pygame.image.load("D:/Python-Game/graphics/end_game/end.jpg").convert_alpha()
+        
+        # Kích thước và vị trí của khung pop-up
+        popup_width = 500
+        popup_height = 300
+        popup_rect = pygame.Rect((WINDOW_WIDTH - popup_width) // 2, (WINDOW_HEIGHT - popup_height) // 2, popup_width, popup_height)
+
+        # Vẽ khung nền trắng với bo góc
+        pygame.draw.rect(self.display_surface, (255, 255, 255), popup_rect, border_radius=20)
+
+        # Chỉnh kích thước hình nền để nhỏ hơn một chút so với khung pop-up
+        background_img_scaled = pygame.transform.scale(background_img, (popup_width - 50, popup_height - 50))
+        offset_y = -20  # Dịch chuyển ảnh nền lên để hiển thị đủ chữ "GAME OVER"
+        background_rect = background_img_scaled.get_rect(center=(popup_rect.centerx, popup_rect.centery + offset_y))
+        self.display_surface.blit(background_img_scaled, background_rect.topleft)
+
+        # Tạo và vẽ nút Restart
+        restart_button_img = pygame.transform.scale(restart_img, (160, 50))
+        restart_button_rect = restart_button_img.get_rect(center=(popup_rect.centerx - 90, popup_rect.centery + 80))
+        self.display_surface.blit(restart_button_img, restart_button_rect)
+
+        # Tạo và vẽ nút Quit
+        quit_button_img = pygame.transform.scale(quit_img, (160, 50))
+        quit_button_rect = quit_button_img.get_rect(center=(popup_rect.centerx + 90, popup_rect.centery + 80))
+        self.display_surface.blit(quit_button_img, quit_button_rect)
+
+        # Kiểm tra sự kiện nhấp chuột vào nút
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_click = pygame.mouse.get_pressed()
+        if restart_button_rect.collidepoint(mouse_pos) and mouse_click[0]:
+            self.restart_game()
+        elif quit_button_rect.collidepoint(mouse_pos) and mouse_click[0]:
+            pygame.quit()
+            sys.exit()
 
     def run(self):                   
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
