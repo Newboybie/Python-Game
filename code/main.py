@@ -1,4 +1,6 @@
-import pygame, sys                   
+import pygame, sys
+from pygame.gfxdraw import pixel
+
 from settings import *               # Nhập các thiết lập từ file settings, như WINDOW_WIDTH và WINDOW_HEIGHT
 from pytmx.util_pygame import load_pygame  # Nhập hàm load_pygame để tải bản đồ TMX
 from tiles import Tile, CollisionTile, MovingFlatform               # Nhập lớp Tile để tạo các ô (tile) trong game
@@ -70,11 +72,13 @@ class Main:
         self.platform_sprites = pygame.sprite.Group()  #Tạo nhóm `platform` để quản lý các tile có thể di chuyen
         self.bullet_sprites = pygame.sprite.Group()    #Tạo nhóm `bullet` để quản lý bullet
         self.vunerable_sprites = pygame.sprite.Group()   #Tạo nhóm `vunerable` để quản lý các nhóm có thể bị tiêu diệt
+        self.remaining_enemies = 0 # Số lượng địch còn lại
 
         self.setup()                  # Thiết lập trò chơi bằng cách tải bản đồ và tạo các tile
         self.overlay = Overlay(self.player)
 
         self.game_over = False  # Trạng thái ban đầu của game
+        self.win_game = False
         self.font = pygame.font.Font(None, 40)  # Font chữ cho menu
 
         # Bullet images
@@ -117,7 +121,9 @@ class Main:
                     groups= [self.all_sprites, self.vunerable_sprites], 
                     shoot= self.shoot, 
                     player= self.player, 
-                    collision_sprites= self.collision_sprites)    
+                    collision_sprites= self.collision_sprites,
+                    main = self)
+                self.remaining_enemies += 1 # Đếm số lượng địch
             
         #Flatforms
         self.platform_border_rect = []
@@ -201,8 +207,56 @@ class Main:
             pygame.quit()
             sys.exit()
 
+    def draw_congratulation_window(self):
+        # Tạo bề mặt nền cho menu
+        menu_surface = pygame.Surface((400, 200))
+        menu_surface.fill((60, 60, 60))  # Đặt màu nền xám cho menu
+        menu_rect = menu_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
 
-    def run(self):                   
+        you_died_text = self.font.render("CONGRATULATION", True, (255, 0, 0))  # Màu đỏ cho chữ
+        you_died_rect = you_died_text.get_rect(center=(menu_rect.centerx, menu_rect.top + 40))
+
+        # Tạo nút Restart
+        restart_button_rect = pygame.Rect(0, 0, 150, 50)
+        restart_button_rect.center = (menu_rect.centerx - 100, menu_rect.centery + 50)
+
+        # Tạo nút Quit
+        quit_button_rect = pygame.Rect(0, 0, 150, 50)
+        quit_button_rect.center = (menu_rect.centerx + 100, menu_rect.centery + 50)
+
+        # Vẽ toàn bộ menu lên display_surface
+        self.display_surface.blit(menu_surface, menu_rect)
+
+        # vẽ thông báo you died
+        self.display_surface.blit(you_died_text, you_died_rect)
+
+        # Vẽ nút Restart
+        pygame.draw.rect(self.display_surface, (34, 139, 34), restart_button_rect)  # Màu xanh cho nút restart
+        restart_text = self.font.render("Restart", True, (255, 255, 255))  # Văn bản trắng
+        self.display_surface.blit(restart_text, restart_text.get_rect(center=restart_button_rect.center))
+
+        # Vẽ nút Quit
+        pygame.draw.rect(self.display_surface, (200, 0, 0), quit_button_rect)  # Màu đỏ cho nút quit
+        quit_text = self.font.render("Quit", True, (255, 255, 255))  # Văn bản trắng
+        self.display_surface.blit(quit_text, quit_text.get_rect(center=quit_button_rect.center))
+
+        # Kiểm tra sự kiện nhấp vào nút
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_click = pygame.mouse.get_pressed()
+
+        if restart_button_rect.collidepoint(mouse_pos) and mouse_click[0]:
+            self.restart_game()
+
+        if quit_button_rect.collidepoint(mouse_pos) and mouse_click[0]:
+            pygame.quit()
+            sys.exit()
+
+    def draw_enemy_count(self):
+        enemy_text = f"Enemies Left: {self.remaining_enemies}"
+        text_surface = self.font.render(enemy_text, True, (0, 0, 0))  # Tạo surface từ văn bản
+        self.display_surface.blit(text_surface, (1000, 10))  # Vẽ surface lên màn hình tại vị trí (10, 10)
+
+    def run(self):
         while True:                  # Vòng lặp chính của trò chơi, chạy liên tục đến khi người chơi thoát
             for event in pygame.event.get():  
                 if event.type == pygame.QUIT:  
@@ -218,22 +272,27 @@ class Main:
             # self.all_sprites.custom_draw(self.player)   # Vẽ tất cả sprite bằng custom_draw với vị trí của người chơi làm trung tâm
             # self.overlay.display()                      # Game UI/UX
 
-            if not self.game_over:
+            if not self.game_over and not self.win_game:
                 self.display_surface.fill((249, 131, 103))
-
+                print(self.remaining_enemies)
                 self.plarform_collisions()
                 self.all_sprites.update(dt)
                 self.bullet_collision()
                 self.all_sprites.custom_draw(self.player)
                 self.overlay.display()
+                self.draw_enemy_count()
 
                 # Kiểm tra điều kiện kết thúc game
                 if not self.player.alive:  # Nếu nhân vật chết
                     self.game_over = True
+                if self.remaining_enemies == 0: # Nếu tiêu diệt hết địch
+                    self.win_game = True
 
             # Khi game kết thúc, hiển thị menu
-            else:
+            elif self.game_over:
                 self.draw_game_over_menu()
+            else:
+                self.draw_congratulation_window()
             
             pygame.display.update()                     # Cập nhật màn hình với các thay đổi đã thực hiện
 
