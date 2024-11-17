@@ -15,7 +15,7 @@ class Player(Entity):
 
         #Vertical movement
         self.gravity = 15
-        self.jump_speed = 1200
+        self.jump_speed = 900
         self.on_floor = False
 
         self.health = 10                        # Override health để tăng máu cho người chơi
