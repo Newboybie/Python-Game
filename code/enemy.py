@@ -4,8 +4,9 @@ from settings import *
 from entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, pos, path, groups, shoot, player, collision_sprites):
+    def __init__(self, pos, path, groups, shoot, player, collision_sprites, main):
         super().__init__(pos, path, groups, shoot)
+        self.main = main
         self.player = player
         self.cooldown = 1000                                 # Giảm tốc độ bắn của kẻ địch
         
@@ -35,6 +36,12 @@ class Enemy(Entity):
 
             self.can_shoot = False
             self.shoot_time = pygame.time.get_ticks()
+
+    def check_death(self):                      # Hàm tiêu diệt khi hết máu
+        if self.health <= 0:
+            self.kill()
+            self.main.remaining_enemies -= 1
+
 
     def update(self,dt):
         self.get_status()

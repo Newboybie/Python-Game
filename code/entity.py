@@ -2,6 +2,7 @@ from math import sin
 import os
 import pygame
 from pygame.math import Vector2 as vector
+
 from settings import *
 
 
@@ -71,6 +72,8 @@ class Entity(pygame.sprite.Sprite):
     def check_death(self):                      # Hàm tiêu diệt khi hết máu
         if self.health <= 0:
             self.kill()
+
+
 
     def import_assets(self, path):
         self.animations = {}  # Tạo một từ điển trống để lưu các animation theo từng tên thư mục.
